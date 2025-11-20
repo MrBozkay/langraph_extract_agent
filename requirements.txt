@@ -1,0 +1,24 @@
+# Core Dependencies
+minio==7.2.5
+python-dotenv==1.0.1
+pydantic==2.6.1
+pydantic-settings==2.1.0
+
+# LangChain & LangGraph
+langchain-core==0.1.23
+langgraph>=0.2.0
+langchain-google-genai==1.0.1
+
+# LangExtract - Google's structured extraction library
+langextract==0.2.0
+
+# Optional: For future Ollama support
+# langchain-community==0.0.20
+# ollama==0.1.6
+
+# Optional: For future Knowledge Graph support
+# neo4j==5.16.0
+# pydgraph==21.3.2
+
+# Utilities
+requests==2.31.0

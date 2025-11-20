@@ -1,0 +1,48 @@
+version: '3.8'
+
+services:
+  # Extraction Pipeline Application (Production)
+  extraction-app:
+    build: .
+    container_name: extraction-pipeline-prod
+    environment:
+      # Remote MinIO Configuration
+      - MINIO_ENDPOINT=4.5.236.214:9005
+      - MINIO_ACCESS_KEY=myuserww
+      - MINIO_SECRET_KEY=mysecret123ww
+      - MINIO_BUCKET_NAME=web-scrape
+      - MINIO_SECURE=false
+    env_file:
+      - .env
+    volumes:
+      - ./src:/app/src
+      - ./logs:/app/logs
+    # Use production runner by default
+    command: python src/agents/run_batch_production.py
+    restart: unless-stopped
+    networks:
+      - extraction-network
+
+  # Optional: Local MinIO for testing (commented out for production)
+  # minio:
+  #   image: minio/minio:latest
+  #   container_name: extraction-minio-local
+  #   ports:
+  #     - "9000:9000"
+  #     - "9001:9001"
+  #   environment:
+  #     MINIO_ROOT_USER: minioadmin
+  #     MINIO_ROOT_PASSWORD: minioadmin
+  #   volumes:
+  #     - minio-data:/data
+  #   command: server /data --console-address ":9001"
+  #   networks:
+  #     - extraction-network
+
+volumes:
+  minio-data:
+    driver: local
+
+networks:
+  extraction-network:
+    driver: bridge
