@@ -6,12 +6,27 @@ services:
     build: .
     container_name: extraction-pipeline-prod
     environment:
-      # Remote MinIO Configuration
-      - MINIO_ENDPOINT=4.5.236.214:9005
-      - MINIO_ACCESS_KEY=myuserww
-      - MINIO_SECRET_KEY=mysecret123ww
-      - MINIO_BUCKET_NAME=web-scrape
-      - MINIO_SECURE=false
+      # MinIO Configuration (from .env file)
+      - MINIO_ENDPOINT=${MINIO_ENDPOINT}
+      - MINIO_ACCESS_KEY=${MINIO_ACCESS_KEY}
+      - MINIO_SECRET_KEY=${MINIO_SECRET_KEY}
+      - MINIO_BUCKET_NAME=${MINIO_BUCKET_NAME}
+      - MINIO_SECURE=${MINIO_SECURE}
+      # LLM Configuration
+      - GOOGLE_API_KEY=${GOOGLE_API_KEY}
+      - LANGEXTRACT_MODEL=${LANGEXTRACT_MODEL}
+      # Extraction Settings
+      - EXTRACTION_BATCH_SIZE=${EXTRACTION_BATCH_SIZE}
+      - EXTRACTION_RETRY_COUNT=${EXTRACTION_RETRY_COUNT}
+      - EXTRACTION_RETRY_DELAY=${EXTRACTION_RETRY_DELAY}
+      - EXTRACTION_TIMEOUT=${EXTRACTION_TIMEOUT}
+      - EXTRACTION_MAX_WORKERS=${EXTRACTION_MAX_WORKERS}
+      # Rate Limiting
+      - RATE_LIMIT_REQUESTS_PER_MINUTE=${RATE_LIMIT_REQUESTS_PER_MINUTE}
+      - RATE_LIMIT_DELAY_BETWEEN_REQUESTS=${RATE_LIMIT_DELAY_BETWEEN_REQUESTS}
+      # Logging
+      - LOG_LEVEL=${LOG_LEVEL}
+      - LOG_FILE=${LOG_FILE}
     env_file:
       - .env
     volumes:
