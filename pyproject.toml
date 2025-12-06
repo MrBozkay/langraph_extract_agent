@@ -1,0 +1,174 @@
+[build-system]
+requires = ["setuptools>=61.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "langraph-extract-agent"
+version = "1.0.0"
+description = "Production-ready German business data extraction pipeline"
+authors = [
+    {name = "LangGraph Extract Agent Contributors", email = "contributors@example.com"}
+]
+maintainers = [
+    {name = "LangGraph Extract Agent Contributors", email = "contributors@example.com"}
+]
+license = {text = "MIT"}
+readme = "README.md"
+requires-python = ">=3.11"
+keywords = [
+    "extraction",
+    "german-business",
+    "langgraph",
+    "langextract",
+    "minio",
+    "production",
+    "pipeline"
+]
+classifiers = [
+    "Development Status :: 5 - Production/Stable",
+    "Intended Audience :: Developers",
+    "Intended Audience :: Information Technology",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Topic :: Software Development :: Libraries :: Python Modules",
+    "Topic :: Text Processing :: Linguistic",
+    "Topic :: Office/Business",
+]
+dependencies = [
+    "minio>=7.2.0",
+    "python-dotenv>=1.0.0",
+    "pydantic>=2.6.0",
+    "pydantic-settings>=2.1.0",
+    "langchain-core>=0.3.0",
+    "langgraph>=0.2.0",
+    "langchain-google-genai>=2.0.0",
+    "langextract>=1.1.0",
+    "requests>=2.31.0",
+]
+
+[project.optional-dependencies]
+test = [
+    "pytest>=7.4.0",
+    "pytest-cov>=4.1.0",
+    "pytest-mock>=3.11.1",
+]
+dev = [
+    "black>=23.0.0",
+    "isort>=5.12.0",
+    "flake8>=6.0.0",
+    "mypy>=1.5.0",
+    "pre-commit>=3.4.0",
+]
+docs = [
+    "sphinx>=7.0.0",
+    "sphinx-rtd-theme>=1.3.0",
+]
+
+[project.scripts]
+langraph-extract = "src.agents.run_batch_production:main"
+langraph-graph = "src.agents.about_graph:main"
+langraph-simple = "src.agents.run_about_extraction:main"
+
+[project.urls]
+Homepage = "https://github.com/MrBozkay/langraph_extract_agent"
+Repository = "https://github.com/MrBozkay/langraph_extract_agent"
+Documentation = "https://github.com/MrBozkay/langraph_extract_agent/blob/main/README.md"
+"Bug Tracker" = "https://github.com/MrBozkay/langraph_extract_agent/issues"
+Changelog = "https://github.com/MrBozkay/langraph_extract_agent/blob/main/CHANGELOG.md"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+include = ["src*"]
+
+[tool.setuptools.package-data]
+"*" = ["*.py", "*.md", "*.txt"]
+
+[tool.black]
+line-length = 88
+target-version = ['py311']
+include = '\.pyi?$'
+extend-exclude = '''
+/(
+  # directories
+  \.eggs
+  | \.git
+  | \.hg
+  | \.mypy_cache
+  | \.tox
+  | \.venv
+  | build
+  | dist
+)/
+'''
+
+[tool.isort]
+profile = "black"
+multi_line_output = 3
+line_length = 88
+known_first_party = ["src"]
+
+[tool.mypy]
+python_version = "3.11"
+warn_return_any = true
+warn_unused_configs = true
+disallow_untyped_defs = true
+disallow_incomplete_defs = true
+check_untyped_defs = true
+disallow_untyped_decorators = true
+no_implicit_optional = true
+warn_redundant_casts = true
+warn_unused_ignores = true
+warn_no_return = true
+warn_unreachable = true
+strict_equality = true
+
+[[tool.mypy.overrides]]
+module = [
+    "minio.*",
+    "langextract.*",
+    "langgraph.*",
+    "langchain.*",
+]
+ignore_missing_imports = true
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+python_files = ["test_*.py"]
+python_classes = ["Test*"]
+python_functions = ["test_*"]
+addopts = "-v --tb=short --strict-markers"
+markers = [
+    "unit: Unit tests",
+    "integration: Integration tests", 
+    "slow: Slow running tests",
+]
+filterwarnings = [
+    "ignore::DeprecationWarning",
+    "ignore::PendingDeprecationWarning",
+]
+
+[tool.coverage.run]
+source = ["src"]
+omit = [
+    "*/tests/*",
+    "*/venv/*",
+    "*/__pycache__/*",
+]
+
+[tool.coverage.report]
+exclude_lines = [
+    "pragma: no cover",
+    "def __repr__",
+    "if self.debug:",
+    "if settings.DEBUG",
+    "raise AssertionError",
+    "raise NotImplementedError",
+    "if 0:",
+    "if __name__ == .__main__.:",
+    "class .*\\bProtocol\\):",
+    "@(abc\\.)?abstractmethod",
+]
