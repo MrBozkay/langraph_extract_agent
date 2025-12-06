@@ -13,10 +13,10 @@ nano .env
 **Required Configuration:**
 ```bash
 # Remote MinIO Server
-MINIO_ENDPOINT=4.5.236.214:9005
-MINIO_ACCESS_KEY=myuserww
-MINIO_SECRET_KEY=mysecret123ww
-MINIO_BUCKET_NAME=web-scrape
+MINIO_ENDPOINT=your-minio-server:9005
+MINIO_ACCESS_KEY=your-access-key
+MINIO_SECRET_KEY=your-secret-key
+MINIO_BUCKET_NAME=your-bucket-name
 MINIO_SECURE=false
 
 # Gemini API
@@ -197,8 +197,8 @@ After=network.target
 [Service]
 Type=simple
 User=youruser
-WorkingDirectory=/path/to/static-trifid
-ExecStart=/path/to/static-trifid/venv/bin/python src/agents/run_batch_production.py
+WorkingDirectory=/path/to/langraph_extract_agent
+ExecStart=/path/to/langraph_extract_agent/venv/bin/python src/agents/run_batch_production.py
 Restart=always
 RestartSec=10
 
@@ -217,7 +217,7 @@ sudo systemctl status extraction-pipeline
 
 ```bash
 # Run every hour
-0 * * * * cd /path/to/static-trifid && /path/to/venv/bin/python src/agents/run_batch_production.py >> logs/cron.log 2>&1
+0 * * * * cd /path/to/langraph_extract_agent && /path/to/venv/bin/python src/agents/run_batch_production.py >> logs/cron.log 2>&1
 ```
 
 ## 📊 Performance Benchmarks

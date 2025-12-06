@@ -4,7 +4,7 @@
 
 ### 1. Clone & Setup
 ```bash
-cd /home/mustafa/.gemini/antigravity/playground/static-trifid
+cd langraph_extract_agent
 ./setup_venv.sh
 ```
 
@@ -89,4 +89,4 @@ python test_extraction.py
 
 ## 📚 Full Documentation
 
-See [README.md](file:///home/mustafa/.gemini/antigravity/playground/static-trifid/README.md) for complete documentation.
+See [README.md](README.md) for complete documentation.
