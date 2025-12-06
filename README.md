@@ -54,11 +54,16 @@ python src/agents/run_batch_production.py
 
 | Agent | Use Case | Speed | Features |
 |-------|----------|-------|----------|
-| **Production Batch** | Production deployment | ⚡⚡⚡ | Parallel, Retry, Rate limit |
-| **LangGraph** | State tracking | ⚡ | Workflow visualization |
+| **Production Batch** | Production deployment | ⚡⚡⚡ | Parallel, Retry, Rate limit, Limited objects |
+| **LangGraph** | State tracking | ⚡ | Workflow visualization, Limited objects |
 | **Simple Batch** | Testing/Debug | ⚡ | Easy to understand |
 
 **💡 Recommendation**: Use `run_batch_production.py` for production.
+
+**🔧 New Features**:
+- `list_objects()` with `limit` parameter (default: 50)
+- `recursive=False` for non-recursive listing (default: `True`)
+- Command-line parameters for `test_minio.py`
 
 ## 🎯 Example Output
 
@@ -119,8 +124,11 @@ docker-compose down
 ## 🧪 Testing
 
 ```bash
-# Test MinIO connection
-python test_minio.py
+# Test MinIO connection (with parameters)
+python test_minio.py --help                    # Show help
+python test_minio.py                           # Default: 5 files, non-recursive
+python test_minio.py --recursive --limit 20     # Recursive with 20 files
+python test_minio.py --prefix "folder/" --limit 10  # Custom prefix
 
 # Test extraction
 python test_extraction.py
@@ -134,6 +142,8 @@ python test_production_features.py
 - **Processing Speed**: ~2-3 files/second (5 workers)
 - **Success Rate**: >95% (with retry logic)
 - **Extraction Time**: ~2-5 seconds per file
+- **Memory Usage**: Optimized with object limiting
+- **Network Efficiency**: Non-recursive listing by default
 
 ## 🔄 Ollama Support
 

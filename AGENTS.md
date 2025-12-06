@@ -1,4 +1,7 @@
 # Agent Development Guide
+When you need to search docs, use `context7` tools.
+If you are unsure how to do something, use `gh_grep` to search code examples from github.
+
 
 ## Build/Test Commands
 ```bash
