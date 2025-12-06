@@ -3,9 +3,10 @@ Production-ready LangExtract-based German business information extractor.
 
 Enhanced with retry logic, error handling, rate limiting, and statistics.
 """
+
 import textwrap
 import langextract as lx
-from typing import Optional
+from typing import Optional, Any
 import os
 import time
 from src.models.schemas import CompanyInfoLite
@@ -65,8 +66,8 @@ EXAMPLES = [
     ),
     lx.data.ExampleData(
         text="Angaben gemäß § 5 TMG: Zahnärztin Dr. Claudia Becker, "
-             "Telefon: (0441) 560015-0, Telefax: (0441) 560015-4, "
-             "E-Mail: praxis@dr-claudia-becker.de, Internet: www.dr-claudia-becker.de",
+        "Telefon: (0441) 560015-0, Telefax: (0441) 560015-4, "
+        "E-Mail: praxis@dr-claudia-becker.de, Internet: www.dr-claudia-becker.de",
         extractions=[
             lx.data.Extraction(
                 extraction_class="company_info",
@@ -87,9 +88,9 @@ EXAMPLES = [
     ),
     lx.data.ExampleData(
         text="Rechtsanwaltskanzlei Schmidt & Partner\n"
-             "Inhaber: RA Dr. jur. Michael Schmidt\n"
-             "Kontakt: m.schmidt@ra-schmidt.de\n"
-             "Tel: +49 30 123456",
+        "Inhaber: RA Dr. jur. Michael Schmidt\n"
+        "Kontakt: m.schmidt@ra-schmidt.de\n"
+        "Tel: +49 30 123456",
         extractions=[
             lx.data.Extraction(
                 extraction_class="company_info",
@@ -114,74 +115,74 @@ EXAMPLES = [
 class AboutExtractorV2:
     """
     Production-ready LangExtract-based extractor for German business information.
-    
+
     Features:
     - Retry logic with exponential backoff
     - Rate limiting
     - Error handling and logging
     - Performance tracking
     """
-    
+
     def __init__(self, model_id: Optional[str] = None):
         """
         Initialize the extractor.
-        
+
         Args:
             model_id: LLM model to use (defaults to settings.langextract_model)
         """
         self.model_id = model_id or settings.langextract_model
         self.minio = MinIOManager()
-        
+
         # Set up API key for Gemini
         if settings.google_api_key:
             os.environ["GOOGLE_API_KEY"] = settings.google_api_key
-        
+
         logger.info(f"Initialized AboutExtractorV2 with model: {self.model_id}")
 
     @retry_with_backoff(exceptions=(Exception,))
-    def _call_langextract(self, text: str) -> Optional[lx.ExtractionResult]:
+    def _call_langextract(self, text: str) -> Optional[Any]:
         """
         Call LangExtract API with retry logic.
-        
+
         Args:
             text: Text to extract from
-            
+
         Returns:
             ExtractionResult or None
         """
         # Apply rate limiting
         rate_limiter.wait_if_needed()
-        
+
         result = lx.extract(
             text_or_documents=text,
             prompt_description=ABOUT_PROMPT,
             examples=EXAMPLES,
             model_id=self.model_id,
             fence_output=True,
-            use_schema_constraints=False
+            use_schema_constraints=False,
         )
-        
+
         return result
 
     def extract_from_markdown_text(self, text: str) -> Optional[CompanyInfoLite]:
         """
         Extract company information from markdown text.
-        
+
         Args:
             text: Markdown content to extract from
-            
+
         Returns:
             CompanyInfoLite object or None if extraction failed
         """
         if not text or len(text.strip()) < 10:
             logger.warning("Text too short for extraction")
             return None
-        
+
         try:
             start_time = time.time()
             result = self._call_langextract(text)
             elapsed = time.time() - start_time
-            
+
             logger.debug(f"LangExtract call took {elapsed:.2f}s")
 
             # LangExtract returns extraction objects
@@ -193,7 +194,7 @@ class AboutExtractorV2:
             for ext in result.extractions:
                 if ext.extraction_class == "company_info":
                     attrs = ext.attributes or {}
-                    
+
                     company_info = CompanyInfoLite(
                         owner_name=attrs.get("owner_name", "") or "",
                         position=attrs.get("position", "") or "",
@@ -205,12 +206,14 @@ class AboutExtractorV2:
                         profession=attrs.get("profession", "") or "",
                         sector=attrs.get("sector", "") or "",
                     )
-                    
-                    logger.info(f"✓ Extracted: {company_info.company_name or company_info.owner_name}")
+
+                    logger.info(
+                        f"✓ Extracted: {company_info.company_name or company_info.owner_name}"
+                    )
                     return company_info
 
             return None
-            
+
         except Exception as e:
             logger.error(f"Extraction error: {e}", exc_info=True)
             raise
@@ -218,24 +221,24 @@ class AboutExtractorV2:
     def extract_from_minio_object(self, object_name: str) -> Optional[CompanyInfoLite]:
         """
         Extract company information from a MinIO object.
-        
+
         Args:
             object_name: Full path to the markdown file in MinIO
-            
+
         Returns:
             CompanyInfoLite object or None if extraction failed
         """
         logger.info(f"📥 Downloading: {object_name}")
-        
+
         try:
             markdown = self.minio.download_object(object_name, as_text=True)
-            
+
             if not markdown:
                 logger.error(f"Failed to download: {object_name}")
                 return None
-            
+
             return self.extract_from_markdown_text(markdown)
-            
+
         except Exception as e:
             logger.error(f"Error processing {object_name}: {e}", exc_info=True)
             raise
