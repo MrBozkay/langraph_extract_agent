@@ -37,7 +37,7 @@ jobs:
         
     - name: Run linting
       run: |
-        flake8 src tests
+        ruff check src tests
         mypy src
         
     - name: Run tests
