@@ -2,11 +2,13 @@
 MinIO client wrapper for object storage operations.
 """
 
+import io
+import json
+from typing import Dict, List, Optional, Union
+
 from minio import Minio
 from minio.error import S3Error
-from typing import List, Dict, Optional
-import json
-import io
+
 from src.config.settings import settings
 
 
@@ -39,10 +41,7 @@ class MinIOManager:
             raise
 
     def list_objects(
-        self, 
-        prefix: str = "", 
-        recursive: bool = True,
-        limit: int = 50
+        self, prefix: str = "", recursive: bool = True, limit: Optional[int] = None
     ) -> List[Dict[str, str]]:
         """
         List objects in bucket with optional prefix filtering.
@@ -81,8 +80,10 @@ class MinIOManager:
             print(f"✗ Error listing objects: {e}")
             return []
 
-        def download_object(self, object_name: str, as_text: bool = True) -> Optional[str]:
-                """
+    def download_object(
+        self, object_name: str, as_text: bool = True
+    ) -> Optional[Union[str, bytes]]:
+        """
         Download an object from MinIO.
 
         Args:
@@ -105,13 +106,13 @@ class MinIOManager:
             print(f"✗ Error downloading {object_name}: {e}")
             return None
 
-        def upload_json(
+    def upload_json(
         self,
         object_name: str,
         data: dict,
         content_type: str = "application/json; charset=utf-8",
-        ) -> bool:
-                """
+    ) -> bool:
+        """
         Upload JSON data to MinIO.
 
         Args:
@@ -140,14 +141,14 @@ class MinIOManager:
             print(f"✗ Error uploading {object_name}: {e}")
             return False
 
-        def put_object(
+    def put_object(
         self,
         object_name: str,
         data: bytes,
         length: int,
-            content_type: str = "application/octet-stream",
-            ) -> bool:
-                """
+        content_type: str = "application/octet-stream",
+    ) -> bool:
+        """
         Generic object upload method.
 
         Args:
@@ -174,8 +175,8 @@ class MinIOManager:
             print(f"✗ Error uploading {object_name}: {e}")
             return False
 
-        def object_exists(self, object_name: str) -> bool:
-                """
+    def object_exists(self, object_name: str) -> bool:
+        """
         Check if an object exists in bucket.
 
         Args:

@@ -8,11 +8,13 @@ This module implements a state-based graph workflow that:
 4. Saves results as JSON back to MinIO
 """
 
-from typing import TypedDict, List, Optional
-from langgraph.graph import StateGraph, END
-from src.modules.minio_manager import MinIOManager
+from typing import List, Optional, TypedDict
+
+from langgraph.graph import END, StateGraph
+
 from src.agents.about_extractor import AboutExtractor
 from src.models.schemas import CompanyInfoLite
+from src.modules.minio_manager import MinIOManager
 
 
 class ScrapeState(TypedDict, total=False):
@@ -39,7 +41,7 @@ def node_list_objects(state: ScrapeState) -> ScrapeState:
     """
     print("📁 Listing markdown files from MinIO...")
 
-    objs = minio_mgr.list_objects(prefix="scraped-content/", recursive=False, limit=20)
+    objs = minio_mgr.list_objects(prefix="scraped-content/", recursive=True, limit=20)
     md_objects = [o["object_name"] for o in objs if o["object_name"].endswith(".md")]
 
     print(f"✓ Found {len(md_objects)} markdown files")

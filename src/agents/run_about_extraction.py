@@ -4,9 +4,10 @@ Simple batch runner for extraction (non-graph approach).
 This script iterates through all markdown files in MinIO and extracts
 company information, saving results as JSON files.
 """
-from src.modules.minio_manager import MinIOManager
+
 from src.agents.about_extractor import AboutExtractor
 from src.config.settings import settings
+from src.modules.minio_manager import MinIOManager
 
 
 def run_batch_about_extraction():
@@ -17,14 +18,14 @@ def run_batch_about_extraction():
     print(f"📊 Model: {settings.langextract_model}")
     print(f"🗄️  Bucket: {settings.minio_bucket_name}")
     print()
-    
+
     minio_mgr = MinIOManager()
     extractor = AboutExtractor()
 
     # List all markdown files
     objects = minio_mgr.list_objects(prefix="scraped-content/", recursive=True)
     md_objects = [obj for obj in objects if obj["object_name"].endswith(".md")]
-    
+
     print(f"📁 Found {len(md_objects)} markdown files")
     print()
 
@@ -35,9 +36,9 @@ def run_batch_about_extraction():
     for idx, obj in enumerate(md_objects, 1):
         object_name = obj["object_name"]
         json_path = object_name.replace(".md", ".about.json")
-        
+
         print(f"[{idx}/{len(md_objects)}] Processing: {object_name}")
-        
+
         # Skip if JSON already exists
         if minio_mgr.object_exists(json_path):
             print(f"⏭️  Skipping (already exists): {json_path}")
@@ -46,7 +47,7 @@ def run_batch_about_extraction():
 
         # Extract company info
         company_info = extractor.extract_from_minio_object(object_name)
-        
+
         if not company_info:
             print(f"⚠️  No data extracted from: {object_name}")
             error_count += 1
@@ -55,12 +56,12 @@ def run_batch_about_extraction():
         # Save to MinIO
         data = company_info.model_dump()
         success = minio_mgr.upload_json(json_path, data)
-        
+
         if success:
             success_count += 1
         else:
             error_count += 1
-        
+
         print()
 
     # Summary

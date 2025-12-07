@@ -2,10 +2,12 @@
 Test production features and statistics.
 """
 
+from unittest.mock import MagicMock, Mock, patch
+
 import pytest
-from unittest.mock import Mock, patch, MagicMock
-from src.modules.statistics import ExtractionStatistics
+
 from src.modules.retry_handler import RateLimiter
+from src.modules.statistics import ExtractionStatistics
 
 
 class TestExtractionStatistics:

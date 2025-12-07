@@ -2,9 +2,11 @@
 Test configuration and settings.
 """
 
-import pytest
 import os
 from unittest.mock import patch
+
+import pytest
+
 from src.config.settings import settings
 
 
@@ -31,6 +33,7 @@ class TestSettings:
         """Test environment variable override."""
         # Reload settings with new environment
         from importlib import reload
+
         from src.config import settings as new_settings
 
         assert new_settings.settings.minio_endpoint == "test-server:9000"

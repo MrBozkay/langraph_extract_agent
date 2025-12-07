@@ -1,9 +1,15 @@
 """
 Test script for LangExtract extraction with sample German text.
 """
-from src.agents.about_extractor import AboutExtractor
+
+import os
 import sys
 
+# Add project root to Python path for direct execution
+if __name__ == "__main__":
+    sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+
+from src.agents.about_extractor import AboutExtractor
 
 # Sample German business texts
 SAMPLE_TEXTS = [
@@ -19,7 +25,7 @@ SAMPLE_TEXTS = [
         E-Mail: h.mueller@mustermann.de
         Telefon: +49 123 456789
         Website: www.mustermann.de
-        """
+        """,
     },
     {
         "name": "Dental Practice",
@@ -33,7 +39,7 @@ SAMPLE_TEXTS = [
         Telefax: (0441) 560015-4
         E-Mail: praxis@dr-claudia-becker.de
         Internet: www.dr-claudia-becker.de
-        """
+        """,
     },
     {
         "name": "Law Firm",
@@ -48,8 +54,8 @@ SAMPLE_TEXTS = [
         
         Rechtsform: Partnerschaftsgesellschaft
         Tätigkeitsbereich: Wirtschaftsrecht, Arbeitsrecht
-        """
-    }
+        """,
+    },
 ]
 
 
@@ -57,22 +63,22 @@ def test_extraction():
     """Test extraction with sample texts."""
     print("🧪 Testing LangExtract Extraction...")
     print()
-    
+
     try:
         # Initialize extractor
         extractor = AboutExtractor()
         print("✅ AboutExtractor initialized")
         print(f"📊 Model: {extractor.model_id}")
         print()
-        
+
         success_count = 0
-        
+
         for idx, sample in enumerate(SAMPLE_TEXTS, 1):
             print(f"[{idx}/{len(SAMPLE_TEXTS)}] Testing: {sample['name']}")
             print("-" * 60)
-            
-            result = extractor.extract_from_markdown_text(sample['text'])
-            
+
+            result = extractor.extract_from_markdown_text(sample["text"])
+
             if result:
                 print("✅ Extraction successful!")
                 print(f"   Owner: {result.owner_name}")
@@ -86,20 +92,20 @@ def test_extraction():
                 success_count += 1
             else:
                 print("❌ Extraction failed")
-            
+
             print()
-        
+
         print("=" * 60)
         print(f"📊 Results: {success_count}/{len(SAMPLE_TEXTS)} successful")
         print("=" * 60)
-        
+
         if success_count == len(SAMPLE_TEXTS):
             print("\n✅ All extraction tests passed!")
             return True
         else:
             print(f"\n⚠️  {len(SAMPLE_TEXTS) - success_count} tests failed")
             return False
-        
+
     except Exception as e:
         print(f"\n❌ Extraction test failed: {e}")
         print("\nTroubleshooting:")

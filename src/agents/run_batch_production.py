@@ -9,14 +9,14 @@ Features:
 - Retry logic
 """
 
-from concurrent.futures import ThreadPoolExecutor, as_completed
-from typing import List, Dict
 import time
-from src.modules.minio_manager import MinIOManager
+from concurrent.futures import ThreadPoolExecutor, as_completed
+
 from src.agents.about_extractor_v2 import AboutExtractorV2
-from src.modules.statistics import ExtractionStatistics
-from src.modules.logger import logger
 from src.config.settings import settings
+from src.modules.logger import logger
+from src.modules.minio_manager import MinIOManager
+from src.modules.statistics import ExtractionStatistics
 
 
 def process_single_file(

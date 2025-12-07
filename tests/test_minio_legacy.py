@@ -2,10 +2,16 @@
 Test script for MinIO connectivity and basic operations.
 """
 
-from src.modules.minio_manager import MinIOManager
+import argparse
+import os
 import sys
 import time
-import argparse
+
+# Add project root to Python path for direct execution
+if __name__ == "__main__":
+    sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+
+from src.modules.minio_manager import MinIOManager
 
 
 def test_minio_connection(prefix="scraped-content/", recursive=False, limit=5):

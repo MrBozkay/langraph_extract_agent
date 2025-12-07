@@ -1,18 +1,19 @@
 """
 Configuration management using Pydantic Settings.
 """
-from pydantic_settings import BaseSettings, SettingsConfigDict
+
 from typing import Optional
+
+from pydantic_settings import BaseSettings, SettingsConfigDict
 
 
 class Settings(BaseSettings):
     """
     Application settings loaded from environment variables.
     """
+
     model_config = SettingsConfigDict(
-        env_file=".env",
-        env_file_encoding="utf-8",
-        case_sensitive=False
+        env_file=".env", env_file_encoding="utf-8", case_sensitive=False
     )
 
     # MinIO Configuration
@@ -25,7 +26,7 @@ class Settings(BaseSettings):
     # LLM Configuration
     google_api_key: Optional[str] = None
     langextract_model: str = "gemini-2.0-flash-exp"
-    
+
     # Ollama Configuration (for future use)
     ollama_base_url: Optional[str] = "http://localhost:11434"
     ollama_model: Optional[str] = "gpt-oss:20b"

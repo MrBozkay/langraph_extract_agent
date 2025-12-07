@@ -1,24 +1,16 @@
-.PHONY: help install test lint format clean build publish
+.PHONY: help install format clean build publish ci
 
 help:
 	@echo "Available commands:"
 	@echo "  install    Install package in development mode"
-	@echo "  test       Run tests"
-	@echo "  lint       Run linting"
 	@echo "  format     Format code"
 	@echo "  clean      Clean build artifacts"
 	@echo "  build      Build package"
 	@echo "  publish    Publish to PyPI"
+	@echo "  ci         Run full CI pipeline locally"
 
 install:
 	pip install -e ".[dev]"
-
-test:
-	pytest tests/ -v --cov=src --cov-report=html --cov-report=term
-
-lint:
-	flake8 src tests
-	mypy src
 
 format:
 	black src tests
@@ -34,3 +26,8 @@ build: clean
 
 publish: build
 	python -m twine upload dist/*
+
+ci: install format
+	pytest tests/ -v --cov=src --cov-report=html --cov-report=term
+	flake8 src tests
+	mypy src

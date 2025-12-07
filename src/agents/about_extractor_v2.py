@@ -4,20 +4,22 @@ Production-ready LangExtract-based German business information extractor.
 Enhanced with retry logic, error handling, rate limiting, and statistics.
 """
 
-import textwrap
-import langextract as lx
-from typing import Optional, Any
 import os
+import textwrap
 import time
-from src.models.schemas import CompanyInfoLite
-from src.modules.minio_manager import MinIOManager
-from src.modules.retry_handler import retry_with_backoff, rate_limiter
-from src.modules.logger import logger
-from src.config.settings import settings
+from typing import Any, Optional
 
+import langextract as lx
+
+from src.config.settings import settings
+from src.models.schemas import CompanyInfoLite
+from src.modules.logger import logger
+from src.modules.minio_manager import MinIOManager
+from src.modules.retry_handler import rate_limiter, retry_with_backoff
 
 # German business extraction prompt
-ABOUT_PROMPT = textwrap.dedent("""
+ABOUT_PROMPT = textwrap.dedent(
+    """
     Du bist ein deutscher Business-Informations-Extraktor.
     Extrahiere Firmen-/Praxisdaten aus Impressum / Kontakt / About-Us Texten.
 
@@ -39,7 +41,8 @@ ABOUT_PROMPT = textwrap.dedent("""
     - website: Website-URL
     - profession: Berufsbezeichnung (z.B. Dr. med. dent., Rechtsanwalt)
     - sector: Branche (z.B. Dentistry, Legal, Consulting)
-""")
+"""
+)
 
 
 # Few-shot examples for better extraction accuracy

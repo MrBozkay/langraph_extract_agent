@@ -2,8 +2,10 @@
 Test MinIO manager functionality.
 """
 
+from unittest.mock import MagicMock, Mock, patch
+
 import pytest
-from unittest.mock import Mock, patch, MagicMock
+
 from src.modules.minio_manager import MinIOManager
 
 
@@ -30,7 +32,7 @@ class TestMinIOManager:
             secure=False,
         )
 
-    @patch("src.modules.minio_manager.MinIOManager.client")
+    @patch("src.modules.minio_manager.Minio")
     def test_list_objects(self, mock_client):
         """Test object listing."""
         # Mock MinIO objects
@@ -61,7 +63,7 @@ class TestMinIOManager:
             manager.bucket_name, prefix="test/", recursive=True
         )
 
-    @patch("src.modules.minio_manager.MinIOManager.client")
+    @patch("src.modules.minio_manager.Minio")
     def test_list_objects_with_limit(self, mock_client):
         """Test object listing with limit."""
         # Create 10 mock objects
@@ -83,7 +85,7 @@ class TestMinIOManager:
         assert objects[0]["object_name"] == "test0.md"
         assert objects[4]["object_name"] == "test4.md"
 
-    @patch("src.modules.minio_manager.MinIOManager.client")
+    @patch("src.modules.minio_manager.Minio")
     def test_download_object(self, mock_client):
         """Test object download."""
         # Mock response
@@ -100,7 +102,7 @@ class TestMinIOManager:
         mock_response.close.assert_called_once()
         mock_response.release_conn.assert_called_once()
 
-    @patch("src.modules.minio_manager.MinIOManager.client")
+    @patch("src.modules.minio_manager.Minio")
     def test_upload_json(self, mock_client):
         """Test JSON upload."""
         test_data = {"name": "test", "value": 123}
@@ -118,7 +120,7 @@ class TestMinIOManager:
         assert call_args[1]["length"] > 0  # content length
         assert "application/json" in call_args[1]["content_type"]
 
-    @patch("src.modules.minio_manager.MinIOManager.client")
+    @patch("src.modules.minio_manager.Minio")
     def test_object_exists(self, mock_client):
         """Test object existence check."""
         # Mock stat_object (no exception = exists)
@@ -130,14 +132,19 @@ class TestMinIOManager:
         assert result is True
         mock_client.stat_object.assert_called_once_with(manager.bucket_name, "test.md")
 
-    @patch("src.modules.minio_manager.MinIOManager.client")
+    @patch("src.modules.minio_manager.Minio")
     def test_object_not_exists(self, mock_client):
         """Test object not exists."""
         # Mock stat_object (exception = not exists)
         from minio.error import S3Error
 
         mock_client.stat_object.side_effect = S3Error(
-            "Not found", "test", "test", "test", "test", "test"
+            code="Not found",
+            message="test",
+            resource="test",
+            request_id="test",
+            host_id="test",
+            response=Mock(),
         )
 
         manager = MinIOManager()
