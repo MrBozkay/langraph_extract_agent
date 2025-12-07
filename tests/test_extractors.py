@@ -2,9 +2,8 @@
 Test extraction agents functionality.
 """
 
-from unittest.mock import MagicMock, Mock, patch
+from unittest.mock import Mock, patch
 
-import pytest
 
 from src.agents.about_extractor import AboutExtractor
 from src.agents.about_extractor_v2 import AboutExtractorV2

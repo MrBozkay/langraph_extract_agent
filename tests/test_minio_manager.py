@@ -2,9 +2,8 @@
 Test MinIO manager functionality.
 """
 
-from unittest.mock import MagicMock, Mock, patch
+from unittest.mock import Mock, patch
 
-import pytest
 
 from src.modules.minio_manager import MinIOManager
 

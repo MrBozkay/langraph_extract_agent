@@ -4,7 +4,7 @@ Retry logic and error handling utilities.
 
 import functools
 import time
-from typing import Any, Callable, Optional, Type
+from typing import Any, Callable, Optional
 
 from src.config.settings import settings
 from src.modules.logger import logger

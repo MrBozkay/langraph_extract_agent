@@ -3,7 +3,6 @@ Centralized logging configuration for the extraction pipeline.
 """
 
 import logging
-import os
 from pathlib import Path
 
 from src.config.settings import settings

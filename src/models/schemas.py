@@ -2,7 +2,6 @@
 Pydantic models for structured data extraction.
 """
 
-from typing import Optional
 
 from pydantic import BaseModel, Field
 

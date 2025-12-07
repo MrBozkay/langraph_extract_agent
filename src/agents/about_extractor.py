@@ -46,7 +46,11 @@ ABOUT_PROMPT = textwrap.dedent(
 # Few-shot examples for better extraction accuracy
 EXAMPLES = [
     lx.data.ExampleData(
-        text="Impressum\nMustermann GmbH\nGeschäftsführer: Hans Müller\nE-Mail: h.mueller@mustermann.de",
+        text=(
+            "Impressum\nMustermann GmbH\n"
+            "Geschäftsführer: Hans Müller\n"
+            "E-Mail: h.mueller@mustermann.de"
+        ),
         extractions=[
             lx.data.Extraction(
                 extraction_class="company_info",
@@ -66,9 +70,11 @@ EXAMPLES = [
         ],
     ),
     lx.data.ExampleData(
-        text="Angaben gemäß § 5 TMG: Zahnärztin Dr. Claudia Becker, "
-        "Telefon: (0441) 560015-0, Telefax: (0441) 560015-4, "
-        "E-Mail: praxis@dr-claudia-becker.de, Internet: www.dr-claudia-becker.de",
+        text=(
+            "Angaben gemäß § 5 TMG: Zahnärztin Dr. Claudia Becker, "
+            "Telefon: (0441) 560015-0, Telefax: (0441) 560015-4, "
+            "E-Mail: praxis@dr-claudia-becker.de, Internet: www.dr-claudia-becker.de"
+        ),
         extractions=[
             lx.data.Extraction(
                 extraction_class="company_info",
@@ -88,10 +94,12 @@ EXAMPLES = [
         ],
     ),
     lx.data.ExampleData(
-        text="Rechtsanwaltskanzlei Schmidt & Partner\n"
-        "Inhaber: RA Dr. jur. Michael Schmidt\n"
-        "Kontakt: m.schmidt@ra-schmidt.de\n"
-        "Tel: +49 30 123456",
+        text=(
+            "Rechtsanwaltskanzlei Schmidt & Partner\n"
+            "Inhaber: RA Dr. jur. Michael Schmidt\n"
+            "Kontakt: m.schmidt@ra-schmidt.de\n"
+            "Tel: +49 30 123456"
+        ),
         extractions=[
             lx.data.Extraction(
                 extraction_class="company_info",

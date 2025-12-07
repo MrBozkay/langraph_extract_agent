@@ -11,6 +11,7 @@ Features:
 
 import time
 from concurrent.futures import ThreadPoolExecutor, as_completed
+from typing import Dict
 
 from src.agents.about_extractor_v2 import AboutExtractorV2
 from src.config.settings import settings

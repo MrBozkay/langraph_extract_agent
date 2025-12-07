@@ -13,8 +13,7 @@ install:
 	pip install -e ".[dev]"
 
 format:
-	black src tests
-	isort src tests
+	ruff format src tests
 
 clean:
 	rm -rf build/ dist/ *.egg-info/
@@ -29,5 +28,5 @@ publish: build
 
 ci: install format
 	pytest tests/ -v --cov=src --cov-report=html --cov-report=term
-	flake8 src tests
+	ruff check src tests
 	mypy src

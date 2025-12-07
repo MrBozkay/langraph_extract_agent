@@ -2,9 +2,8 @@
 Test production features and statistics.
 """
 
-from unittest.mock import MagicMock, Mock, patch
+from unittest.mock import patch
 
-import pytest
 
 from src.modules.retry_handler import RateLimiter
 from src.modules.statistics import ExtractionStatistics

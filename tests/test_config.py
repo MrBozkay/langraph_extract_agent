@@ -5,7 +5,6 @@ Test configuration and settings.
 import os
 from unittest.mock import patch
 
-import pytest
 
 from src.config.settings import settings
 
@@ -32,7 +31,6 @@ class TestSettings:
     def test_environment_override(self):
         """Test environment variable override."""
         # Reload settings with new environment
-        from importlib import reload
 
         from src.config import settings as new_settings
 
